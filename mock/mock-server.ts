@@ -11,6 +11,7 @@ import { accessTokenAuth } from './security'
 
 const app = express()
 const port = 9528
+// 根据swagger的api定义文件中的信息
 const { connector, summarise } = require('swagger-routes-express')
 
 // Compression
@@ -33,7 +34,7 @@ app.use((req, res, next) => {
   next()
 })
 
-// Read and swagger config file
+// Read and swagger config file 读取接口的定义文件 swagger.yml
 const apiDefinition = yaml.load(path.resolve(__dirname, 'swagger.yml'))
 // Create mock functions based on swaggerConfig
 const options = {
@@ -41,6 +42,7 @@ const options = {
     AccessTokenAuth: accessTokenAuth
   }
 }
+// 使用connector连接api定义的文件和express路由系统
 const connectSwagger = connector(api, apiDefinition, options)
 connectSwagger(app)
 // Print swagger router api summary

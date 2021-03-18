@@ -42,3 +42,23 @@ export interface IUserData {
   introduction: string
   roles: string[]
 }
+
+export interface Hero {
+  id: number
+  name: string
+  icon: string
+  classify: string[]
+}
+
+export interface Player {
+  id: number
+  accountname: string
+  nickname: string
+  avatar: string
+  level: number
+  exp: number
+  rank: number
+  bravepoints: number
+  winningstreak: number
+  wanttoplay: Hero[]
+}
