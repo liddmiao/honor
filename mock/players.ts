@@ -31,6 +31,7 @@ for (let i = 0; i < playerCount; i++) {
  * @returns wanttoplay list
  */
 function genWantPlay() {
+  // 使用set避免重复数据
   let wantplay: Set<Hero> = new Set()
   while(wantplay.size < 3) {
     wantplay.add(heros[faker.random.number(9)])
@@ -38,17 +39,128 @@ function genWantPlay() {
   return Array.from(wantplay)
 }
 
+/**
+ * 获取用户列表
+ * @param req 
+ * @param res 
+ * @returns 用户列表
+ */
 export const getPlayers = (req: Request, res: Response) =>{
 
   // 根据发送过来的过滤条件对playerlist进行过滤
   const {accountname, page = 1, limit = 10} = req.query
+
   // 搜索用户
-  let mockList = playerList.filter(item => !(accountname && item.accountname.indexOf(accountname.toString()) == -1))
+  let mockList = playerList.filter(item => !(accountname && item.accountname.indexOf(<string>accountname) == -1))
   // 实现分页
-  let pageList = mockList.filter((item, index) => index < Number(limit) * Number(page) && index >= Number(limit) * (Number(page) - 1))
-  
+  // <number> 和page as number 类型断言，告诉编译器我确定这个变量的类型
+  let pageList = mockList.filter((item, index) => index < <number>limit * (page as number) && index >=<number>limit * (<number>page - 1))
+
   res.json({
     code: 200,
-    data: pageList
+    data: {
+      total: pageList.length,
+      players: pageList
+    }
+  })
+}
+
+/**
+ * 根据id获取用户信息
+ * @param req 
+ * @param res 
+ * @returns 对应用户信息
+ */
+export const getPlayer = (req: Request, res: Response) => {
+  const { id } = req.params
+
+  // 遍历playerList，返回对应的用户信息
+  for (const player of playerList) {
+    if (player.id.toString() === id) {
+      return res.json({
+        code: 200,
+        data: {
+          player
+        }
+      })
+    }
+  }
+
+  // 没找到响应数据
+  res.json({
+    code: 7001,
+    message: '没有相应的玩家信息'
+  })
+}
+
+/**
+ * 创建新用户
+ * @param req 
+ * @param res 
+ * @returns 用户信息
+ */
+export const createPlayer = (req: Request, res: Response) => {
+  const { player } = req.body
+
+  res.json({
+    code: 200,
+    data: {
+      player: player
+    }
+  })
+}
+
+/**
+ * 更新用户
+ * @param req 
+ * @param res 
+ * @returns 更新用户信息
+ */
+export const updatePlayer = (req: Request, res: Response) => {
+  const { id } = req.params
+  const { player } = req.body
+
+  for (const p in playerList) {
+    if (p.indexOf.toString() === id) {
+      return res.json({
+        code: 200,
+        data: {
+          player
+        }
+      })
+    }
+  }
+
+  res.json({
+    code: 70001,
+    message: '没有找到玩家信息'
+  })
+}
+
+/**
+ * 删除玩家信息
+ * @param req 
+ * @param res 
+ * @returns 删除成功信息
+ */
+export const deletePlayer = (req: Request, res: Response) => {
+  const { id } = req.params
+
+  for (const player in playerList) {
+    if (player.indexOf.toString() === id) {
+      return res.json({
+        code: 200,
+        data: {
+          success: 1
+        }
+      })
+    }
+  }
+  res.json({
+    code: 7001,
+    message: '删除玩家信息失败',
+    data: {
+      success: 0
+    }
   })
 }
