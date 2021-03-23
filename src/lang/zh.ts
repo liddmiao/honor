@@ -1,5 +1,11 @@
 export default {
+  player: {
+    accountname: '请输入用户名',
+    btnFilter: '搜索',
+    create: '新建'
+  },
   route: {
+    createPlayer: '新建玩家',
     playerMgt: '玩家管理',
     playerList: '玩家列表',
     dashboard: '首页',

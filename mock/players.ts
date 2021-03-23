@@ -48,7 +48,7 @@ function genWantPlay() {
 export const getPlayers = (req: Request, res: Response) =>{
 
   // 根据发送过来的过滤条件对playerlist进行过滤
-  const {accountname, page = 1, limit = 10} = req.query
+  const {accountname, page = 1, limit = 20} = req.query
 
   // 搜索用户
   let mockList = playerList.filter(item => !(accountname && item.accountname.indexOf(<string>accountname) == -1))
@@ -57,9 +57,9 @@ export const getPlayers = (req: Request, res: Response) =>{
   let pageList = mockList.filter((item, index) => index < <number>limit * (page as number) && index >=<number>limit * (<number>page - 1))
 
   res.json({
-    code: 200,
+    code: 20000,
     data: {
-      total: pageList.length,
+      total: mockList.length,
       players: pageList
     }
   })
@@ -78,7 +78,7 @@ export const getPlayer = (req: Request, res: Response) => {
   for (const player of playerList) {
     if (player.id.toString() === id) {
       return res.json({
-        code: 200,
+        code: 20000,
         data: {
           player
         }
@@ -88,7 +88,7 @@ export const getPlayer = (req: Request, res: Response) => {
 
   // 没找到响应数据
   res.json({
-    code: 7001,
+    code: 70001,
     message: '没有相应的玩家信息'
   })
 }
@@ -103,7 +103,7 @@ export const createPlayer = (req: Request, res: Response) => {
   const { player } = req.body
 
   res.json({
-    code: 200,
+    code: 20000,
     data: {
       player: player
     }
@@ -123,7 +123,7 @@ export const updatePlayer = (req: Request, res: Response) => {
   for (const p in playerList) {
     if (p.indexOf.toString() === id) {
       return res.json({
-        code: 200,
+        code: 20000,
         data: {
           player
         }
@@ -149,7 +149,7 @@ export const deletePlayer = (req: Request, res: Response) => {
   for (const player in playerList) {
     if (player.indexOf.toString() === id) {
       return res.json({
-        code: 200,
+        code: 20000,
         data: {
           success: 1
         }
@@ -157,7 +157,7 @@ export const deletePlayer = (req: Request, res: Response) => {
     }
   }
   res.json({
-    code: 7001,
+    code: 70001,
     message: '删除玩家信息失败',
     data: {
       success: 0
